@@ -5,13 +5,13 @@ The Island of Sepris is a homebrew one-shot crafted by myself. While the plot is
 
 ## Dungeon Layout
 
-The dungeon is laid out as a 3x3 grid with one empty space and behaves as a slider puzzle. Each room can be fully customized
+The dungeon is laid out as a 3x3 grid with one or more empty spaces and behaves as a slider puzzle. Each room can be fully customized
 
 ```
 _____________
 |   |   |   |
 |---|---|---|
-|   |   |   |
+|xxx|   |   |
 |---|---|---|
 |   |   |xxx|
 -------------
