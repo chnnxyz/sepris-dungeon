@@ -1,15 +1,20 @@
-from typing import List
+from typing import List, Tuple
 from src.rooms.room import Room
 
 class Grid:
-    def __init__(self, rooms = List[Room]) -> None:
+    def __init__(self, 
+                 rooms: List[Room],
+                 entrance: Tuple[int,int,str] = (2,1,'s'),
+                 exit:Tuple[int,int,str] = (0,1,'n')) -> None:
         # Initialize empty grid
         self.base_grid = [
             [None, None, None],
             [None, None, None],
             [None, None, None]
         ]
-
+        
+        self.entrance = entrance
+        self.exit = exit
         # Fill rooms
 
         for room in rooms:
@@ -31,4 +36,7 @@ class Grid:
         pass
 
     def move_room(self, direction:str, x:int, y:int):
+        pass
+
+    def draw_grid(self):
         pass

@@ -120,3 +120,7 @@ class Room:
         else:
             self._spawn()
             return True
+
+    def move(self,x, y) -> None:
+        self.x += x
+        self.y +=y
