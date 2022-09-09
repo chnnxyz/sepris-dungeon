@@ -54,6 +54,7 @@ class Room:
         self.x = x
         self.y = y
         self.spawn_chance = spawn_chance
+        self.party = False # Is the party in the room?
 
     def _spawn(self):
         '''

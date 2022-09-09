@@ -47,8 +47,20 @@ g = Grid(rooms)
 while True:
     g.draw_grid()
     action = input("Action: ")
+
     if action == "g":
         dir = input("Gravity magic direction: ")
         g.apply_gravity(dir)
+
+    if action == 's':
+        g.shuffle()
+    
+    if action == 'm':
+        selected_room = input("select room (format: x y): ")
+        coords = selected_room.split()
+        x, y = int(coords[0]), int(coords[1])
+
+        dir = input("Room movement direction: ")
+        g.move_room(dir,x,y)
 
 

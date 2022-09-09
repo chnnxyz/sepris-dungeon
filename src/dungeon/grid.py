@@ -1,4 +1,5 @@
 from typing import List, Tuple
+import random
 from src.rooms.room import Room
 from src.rooms.control_rooms import EmptySpace
 
@@ -43,14 +44,10 @@ class Grid:
         if direction=='w':
             for i in range(len(self.base_grid)):
                 self.base_grid[i] = sorted(self.base_grid[i], key=lambda x: isinstance(x,EmptySpace))
-                for j in range(len(self.base_grid[i])):
-                    self.base_grid[i][j].update_position(x=j, y=i)
 
         if direction=='e':
             for i in range(len(self.base_grid)):
                 self.base_grid[i] = sorted(self.base_grid[i], key=lambda x: not isinstance(x,EmptySpace))
-                for j in range(len(self.base_grid[i])):
-                    self.base_grid[i][j].update_position(x=j, y=i)
 
         # North   
         if direction == 'n':
@@ -60,9 +57,6 @@ class Grid:
                 transposed[i] = sorted(transposed[i], key=lambda x: isinstance(x,EmptySpace))
             
             self.base_grid = [list(x) for x in zip(*transposed)]
-            for i in range(len(self.base_grid)):
-                for j in range(len(self.base_grid[i])):
-                    self.base_grid[i][j].update_position(x=j, y=i)
 
         #south
         if direction == 's':
@@ -72,15 +66,56 @@ class Grid:
                 transposed[i] = sorted(transposed[i], key=lambda x: not isinstance(x,EmptySpace))
             
             self.base_grid = [list(x) for x in zip(*transposed)]
-            for i in range(len(self.base_grid)):
-                for j in range(len(self.base_grid[i])):
-                    self.base_grid[i][j].update_position(x=j, y=i)
-            
-            
-        
 
+        for i in range(len(self.base_grid)):
+            for j in range(len(self.base_grid[i])):
+                self.base_grid[i][j].update_position(x=j, y=i)
+            
     def move_room(self, direction:str, x:int, y:int):
-        pass
+        selected_room = self.base_grid[x][y]
+
+        if direction == 'n':
+            if selected_room.y == 0:
+                pass
+            elif not isinstance(self.base_grid[y-1][x], EmptySpace):
+                pass
+            else:
+                self.base_grid[y-1][x], self.base_grid[y][x] = self.base_grid[y][x], self.base_grid[y-1][x]
+            
+        if direction == 's':
+            if selected_room.y == 2:
+                pass
+            elif not isinstance(self.base_grid[y+1][x], EmptySpace):
+                pass
+            else:
+                self.base_grid[y+1][x], self.base_grid[y][x] = self.base_grid[y][x], self.base_grid[y+1][x]
+
+        if direction == 'w':
+            if selected_room.x == 0:
+                pass
+            elif not isinstance(self.base_grid[y][x-1], EmptySpace):
+                pass
+            else:
+                self.base_grid[y][x-1], self.base_grid[y][x] = self.base_grid[y][x], self.base_grid[y][x-1]
+
+        if direction == 'e':
+            if selected_room.x == 2:
+                pass
+            elif not isinstance(self.base_grid[y][x+1], EmptySpace):
+                pass
+            else:
+                self.base_grid[y][x+1], self.base_grid[y][x] = self.base_grid[y][x], self.base_grid[y][x+1]
+            
+        for i in range(len(self.base_grid)):
+            for j in range(len(self.base_grid[i])):
+                self.base_grid[i][j].update_position(x=j, y=i)
+            
+
+    def shuffle(self):
+        choices = ['n','s','e','w']
+        for _ in range(20):
+            dir = random.choice(choices)
+            self.apply_gravity(dir)
 
     def draw_room(self,room:Room,g:str):
         lines = g.split("\n")
