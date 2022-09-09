@@ -17,8 +17,8 @@ class Grid:
         
         self.entrance = entrance
         self.exit = exit
+       
         # Fill rooms
-
         for room in rooms:
             # Control for cases where x or y may get repeated
             if self.base_grid[room.y][room.x] is None:
@@ -36,11 +36,21 @@ class Grid:
                 if self.base_grid[i][j] is None:
                     self.base_grid[i][j] = EmptySpace('empty',x=j,y=i)
 
-
-    def _check_colission(self):
-        pass
+        # Add party to room
+        for i in range(len(self.base_grid)):
+            for j in range(len(self.base_grid[i])):
+                if j == entrance[0] and i == entrance[1]:
+                    self.base_grid[j][i].enter()
     
-    def apply_gravity(self, direction:str):
+    def apply_gravity(self, direction:str) -> None:
+        '''
+        Shifts all rooms in a particular direction, considering collision
+
+        Arguments
+        -----------
+        - direction [str]: 'n', 's', 'e', or 'w', direction to move the full
+                           map to
+        '''
         if direction=='w':
             for i in range(len(self.base_grid)):
                 self.base_grid[i] = sorted(self.base_grid[i], key=lambda x: isinstance(x,EmptySpace))
@@ -71,8 +81,17 @@ class Grid:
             for j in range(len(self.base_grid[i])):
                 self.base_grid[i][j].update_position(x=j, y=i)
             
-    def move_room(self, direction:str, x:int, y:int):
-        selected_room = self.base_grid[x][y]
+    def move_room(self, direction:str, x:int, y:int) -> None:
+        '''
+        Moves a single room
+
+        Arguments
+        -----------
+        - direction [str]: 'n','s','e', or 'w'. Direction to move the room to
+        - x [int]: room x position
+        - y [int]: room y position
+        '''
+        selected_room = self.base_grid[y][x]
 
         if direction == 'n':
             if selected_room.y == 0:
@@ -110,14 +129,66 @@ class Grid:
             for j in range(len(self.base_grid[i])):
                 self.base_grid[i][j].update_position(x=j, y=i)
             
+    def move_party(self, direction:str) -> None:
+        curr_spot = (999,999)
+        for i in range(len(self.base_grid)):
+            for j in range(len(self.base_grid[i])):
+                if self.base_grid[i][j].party:
+                    curr_spot = (j, i)
 
-    def shuffle(self):
+        if direction == 'w':
+            if curr_spot[0] == 0:
+                pass
+            else:
+                self.base_grid[curr_spot[1]][curr_spot[0]].exit()
+                self.base_grid[curr_spot[1]][curr_spot[0]-1].enter()
+
+        if direction == 'e':
+            if curr_spot[0] == 2:
+                pass
+            else:
+                self.base_grid[curr_spot[1]][curr_spot[0]].exit()
+                self.base_grid[curr_spot[1]][curr_spot[0]+1].enter()
+
+        if direction == 's':
+            if curr_spot[1] == 2:
+                pass
+            else:
+                self.base_grid[curr_spot[1]][curr_spot[0]].exit()
+                self.base_grid[curr_spot[1]+1][curr_spot[0]].enter()
+
+        if direction == 'n':
+            if curr_spot[1] == 0:
+                pass
+            else:
+                self.base_grid[curr_spot[1]][curr_spot[0]].exit()
+                self.base_grid[curr_spot[1]-1][curr_spot[0]].enter()
+
+        
+
+    def shuffle(self) -> None:
+        '''
+        Shuffles all dungeon rooms through apply_gravity()
+        '''
         choices = ['n','s','e','w']
         for _ in range(20):
             dir = random.choice(choices)
             self.apply_gravity(dir)
 
-    def draw_room(self,room:Room,g:str):
+    def draw_room(self,room:Room,g:str) -> str:
+        '''
+        draws all elements of a single room
+
+        Arguments
+        -----------
+        - room [Room]: Room object
+        - g [str]: Base Grid
+
+        Returns
+        -----------
+        - [str]: drawn grid
+        '''
+
         lines = g.split("\n")
         if isinstance(room, EmptySpace):
             for i in range(3):
@@ -170,6 +241,12 @@ class Grid:
                                         f"{room.doors['east'][1]} " +
                                         lines[(4*room.y)+2][10*(room.x +1):])
 
+        # Draw party
+        if room.party:
+            lines[(4*room.y)+2] = (lines[(4*room.y)+2][:10*room.x +1+4] +
+                                    "P" +
+                                    lines[(4*room.y)+2][10*(room.x +1)-4:]
+                                )
             
         out = '\n'.join(lines)
         return out

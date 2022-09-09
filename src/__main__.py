@@ -40,13 +40,19 @@ r6 = Room(room_name= '6',
           east_door=(True,None),
           west_door=(True,None))
 
+
 rooms = [r1,r2,r3,r4,r5,r6]
 
 g = Grid(rooms)
 
 while True:
+    for i in range(len(g.base_grid)):
+        for j in range(len(g.base_grid[i])):
+            if g.base_grid[i][j].party==True:
+                print(f'party is at x={j}, y={i}')
     g.draw_grid()
     action = input("Action: ")
+
 
     if action == "g":
         dir = input("Gravity magic direction: ")
@@ -62,5 +68,15 @@ while True:
 
         dir = input("Room movement direction: ")
         g.move_room(dir,x,y)
+    
+    if action == 'e':
+        door = input('select door to enter: ')
+        g.move_party(door)
+
+    if action == 'fp':
+        for i in range(len(g.base_grid)):
+            for j in range(len(g.base_grid[i])):
+                if g.base_grid[i][j].party==True:
+                    print(f'party is at x={g.base_grid[i][j].x}, y={g.base_grid[i][j].y}')
 
 

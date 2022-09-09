@@ -54,7 +54,7 @@ class Room:
         self.x = x
         self.y = y
         self.spawn_chance = spawn_chance
-        self.party = False # Is the party in the room?
+        self.party = False # Is the party in the room
 
     def _spawn(self):
         '''
@@ -63,64 +63,21 @@ class Room:
         rdm = random.random()
         if rdm <= self.spawn_chance:
             print('Enemies Spawned')
+
+    def exit(self):
+        '''
+        Party exits the room
+        '''
+
+        self.party = False
     
-    def exit(self, direction:str) -> Tuple[int,int]:
+    def enter(self) -> bool:
         '''
-        Exit the room to a particular direction
-        '''
-
-        directions={
-            'n': ('north',1),
-            's': ('south',-1),
-            'e': ('east',1),
-            'w': ('west',-1),
-        }
-
-        if direction not in ['n','s','e','w']:
-            raise ValueError('direction only takes n, s, w or e')
-
-        if (self.doors[directions[direction][0]][0]):
-            if direction in ['e','w']:
-                x = self.x + directions[direction][1]
-                y = self.y
-                if x > 2 or x < 0:
-                    print('Door wont open (locked by wall)')
-                    x = self.x
-            else:
-                x = self.x
-                y = self.y + directions[direction][1]
-                if y > 2 or y < 0:
-                    print('Door wont open (locked by wall)')
-                    y = self.y
-        else:
-            print('No door to access')
-            x = self.x
-            y = self.y
-        
-        return x, y
-    
-    def enter(self, direction:str) -> bool:
-        '''
-        Enter the room to a particular direction
+        Enter the room
         '''
 
-        directions={
-            'n': ('north',1),
-            's': ('south',-1),
-            'e': ('east',1),
-            'w': ('west',-1),
-        }
-
-        if direction not in ['n','s','e','w']:
-            raise ValueError('direction only takes n, s, w or e')
-        
-        if not self.doors[directions[direction]][0]:
-            print(f'No door from {direction}')
-            return False
-        
-        else:
-            self._spawn()
-            return True
+        self.party = True
+        self._spawn()
 
     def update_position(self,x:int,y:int) -> None:
         self.x = x
