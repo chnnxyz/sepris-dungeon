@@ -57,7 +57,7 @@ class Grid:
             #transpose shit
             transposed = [list(x) for x in zip(*self.base_grid)]
             for i in range(len(transposed)):
-                transposed[i] = sorted(self.base_grid[i], key=lambda x: isinstance(x,EmptySpace))
+                transposed[i] = sorted(transposed[i], key=lambda x: isinstance(x,EmptySpace))
             
             self.base_grid = [list(x) for x in zip(*transposed)]
             for i in range(len(self.base_grid)):
@@ -69,7 +69,7 @@ class Grid:
             #transpose shit
             transposed = [list(x) for x in zip(*self.base_grid)]
             for i in range(len(transposed)):
-                transposed[i] = sorted(self.base_grid[i], key=lambda x: not isinstance(x,EmptySpace))
+                transposed[i] = sorted(transposed[i], key=lambda x: not isinstance(x,EmptySpace))
             
             self.base_grid = [list(x) for x in zip(*transposed)]
             for i in range(len(self.base_grid)):
@@ -163,7 +163,6 @@ class Grid:
         base_drawing = base_drawing[1:]
         base_drawing = "\n".join(base_drawing)
         bg = self.get_grid()
-        print(bg)
         for i in range(len(bg)):
             for j in range(len(bg[i])):
                 base_drawing = self.draw_room(bg[i][j], 
