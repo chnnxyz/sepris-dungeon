@@ -121,6 +121,6 @@ class Room:
             self._spawn()
             return True
 
-    def move(self,x, y) -> None:
-        self.x += x
-        self.y +=y
+    def update_position(self,x:int,y:int) -> None:
+        self.x = x
+        self.y = y 
